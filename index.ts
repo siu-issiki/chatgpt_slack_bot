@@ -63,7 +63,7 @@ router.post("/slack_event", async (ctx) => {
     await fetch(url, options);
   };
 
-  slackPost(text);
+  await slackPost(text);
   ctx.response.body = { text };
 });
 
