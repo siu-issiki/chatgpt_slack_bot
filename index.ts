@@ -34,7 +34,7 @@ router.post("/slack_event", async (ctx) => {
 
   if (bot_id === undefined) {
     // const res = await chatGPT(text);
-    await slackPost(text, channel);
+    // await slackPost(text, channel);
   }
   ctx.response.body = { text };
 });
