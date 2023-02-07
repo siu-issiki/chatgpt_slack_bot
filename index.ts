@@ -40,10 +40,12 @@ router.get("/", async (ctx) => {
 });
 
 router.post("/slack_event", async (ctx) => {
-  const { challenge } = await ctx.request.body({ type: "json" }).value;
-  console.log(await ctx.request.body({ type: "json" }).value);
+  const {
+    event: { text },
+  } = await ctx.request.body({ type: "json" }).value;
+  console.log(text);
 
-  ctx.response.body = { challenge };
+  ctx.response.body = { text };
 });
 
 app.use(router.routes());
