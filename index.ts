@@ -1,4 +1,5 @@
 import { Application, Router } from "https://deno.land/x/oak@v11.1.0/mod.ts";
+import { slackPost } from "./slack.ts";
 
 const app = new Application();
 const router = new Router();
@@ -41,29 +42,12 @@ router.get("/", async (ctx) => {
 
 router.post("/slack_event", async (ctx) => {
   const {
-    event: { text },
+    event: { text, channel, user },
   } = await ctx.request.body({ type: "json" }).value;
 
-  console.log(await ctx.request.body({ type: "json" }).value);
-
-  const slackPost = async (text: string) => {
-    const url =
-      "https://hooks.slack.com/services/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";
-    const body = {
-      text,
-    };
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    const options = {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers,
-    };
-    await fetch(url, options);
-  };
-
-  await slackPost(text);
+  if (user === "U01J9QZQX4M") {
+    await slackPost(text, channel);
+  }
   ctx.response.body = { text };
 });
 
