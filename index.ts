@@ -1,5 +1,5 @@
 import { Application, Router } from "https://deno.land/x/oak@v11.1.0/mod.ts";
-import { chatGPT } from "./chatgpt.ts";
+import { chatGPT, chatGPTWithPost } from "./chatgpt.ts";
 import { slackPost } from "./slack.ts";
 
 const app = new Application();
@@ -32,9 +32,7 @@ router.post("/slack_event", async (ctx) => {
   console.log(await ctx.request.body({ type: "json" }).value);
 
   if (bot_id === undefined && type === "app_mention") {
-    console.log(text, channel, type);
-    const res = await chatGPT(text);
-    await slackPost(res, channel);
+    chatGPTWithPost(text, channel);
   }
   ctx.response.body = { text };
 });

@@ -1,3 +1,5 @@
+import { slackPost } from "./slack.ts";
+
 const url = "https://api.openai.com/v1/completions";
 const apiKey = Deno.env.get("OPENAI_API_KEY");
 
@@ -21,4 +23,9 @@ export const chatGPT = async (prompt: string) => {
   const { choices } = await res.json();
   const text = choices[0].text;
   return text;
+};
+
+export const chatGPTWithPost = async (prompt: string, channelId: string) => {
+  const res = await chatGPT(prompt);
+  await slackPost(res, channelId);
 };
