@@ -18,6 +18,7 @@ export const chatGPT = async (prompt: string) => {
     headers,
   };
   const res = await fetch(url, options);
-  const { choices: text } = (await res.json())[0];
+  const { choices } = await res.json();
+  const text = choices[0].text;
   return text;
 };
