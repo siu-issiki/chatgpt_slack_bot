@@ -26,10 +26,10 @@ router.get("/", async (ctx) => {
 
 router.post("/slack_event", async (ctx) => {
   const {
-    event: { text, bot_id, channel },
+    event: { text, bot_id, channel, type },
   } = await ctx.request.body({ type: "json" }).value;
 
-  if (bot_id === undefined) {
+  if (bot_id === undefined && type === "message") {
     const res = await chatGPT(text);
     await slackPost(res, channel);
   }
