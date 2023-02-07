@@ -44,6 +44,16 @@ router.post("/slack_event", async (ctx) => {
     event: { text },
   } = await ctx.request.body({ type: "json" }).value;
 
+  slackPost(text);
+  ctx.response.body = { text };
+});
+
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+await app.listen({ port: 8080 });
+
+const slackPost = async (text: string) => {
   const url =
     "https://hooks.slack.com/services/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";
   const body = {
@@ -58,11 +68,6 @@ router.post("/slack_event", async (ctx) => {
     headers,
   };
   await fetch(url, options);
+};
 
-  ctx.response.body = { text };
-});
-
-app.use(router.routes());
-app.use(router.allowedMethods());
-
-await app.listen({ port: 8080 });
+await slackPost("booted");
