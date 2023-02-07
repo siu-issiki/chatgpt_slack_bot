@@ -1,4 +1,5 @@
 import { Application, Router } from "https://deno.land/x/oak@v11.1.0/mod.ts";
+import { chatGPT } from "./chatgpt.ts";
 import { slackPost } from "./slack.ts";
 
 const app = new Application();
@@ -16,28 +17,11 @@ app.addEventListener("error", (evt) => {
   console.log(evt.error);
 });
 
-const url = "https://api.openai.com/v1/completions";
-const apiKey = Deno.env.get("OPENAI_API_KEY");
 router.get("/", async (ctx) => {
   const prompt = "健康に良い習慣を教えてください";
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${apiKey}`,
-  };
-  const body = {
-    model: "text-davinci-003",
-    max_tokens: 1024,
-    temperature: 0.9,
-    prompt,
-  };
-  const options = {
-    method: "POST",
-    body: JSON.stringify(body),
-    headers,
-  };
-  const res = await fetch(url, options);
+  const res = await chatGPT(prompt);
 
-  ctx.response.body = await res.json();
+  ctx.response.body = res;
 });
 
 router.post("/slack_event", async (ctx) => {
@@ -47,7 +31,8 @@ router.post("/slack_event", async (ctx) => {
   } = await ctx.request.body({ type: "json" }).value;
 
   if (bot_id === undefined) {
-    await slackPost(text, channel);
+    const res = await chatGPT(text);
+    await slackPost(res, channel);
   }
   ctx.response.body = { text };
 });
