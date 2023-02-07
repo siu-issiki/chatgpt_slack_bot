@@ -39,6 +39,12 @@ router.get("/", async (ctx) => {
   ctx.response.body = await res.json();
 });
 
+router.get("/slack_event", async (ctx) => {
+  const { challenge } = await ctx.request.body({ type: "json" }).value;
+
+  ctx.response.body = challenge;
+});
+
 app.use(router.routes());
 app.use(router.allowedMethods());
 
