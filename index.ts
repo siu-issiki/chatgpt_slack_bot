@@ -45,6 +45,8 @@ router.post("/slack_event", async (ctx) => {
     event: { text, channel, user },
   } = await ctx.request.body({ type: "json" }).value;
 
+  console.log(await ctx.request.body({ type: "json" }).value);
+
   if (user === "U0J3ZHFS8") {
     await slackPost(text, channel);
   }
