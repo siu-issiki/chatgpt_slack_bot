@@ -32,7 +32,7 @@ router.post("/slack_event", async (ctx) => {
   console.log(await ctx.request.body({ type: "json" }).value);
 
   if (bot_id === undefined && type === "message") {
-    chatGPTWithPost(text, channel);
+    chatGPTWithPost(`次のタスクを分割してください: ${text}`, channel);
   }
   ctx.response.body = { text };
 });
